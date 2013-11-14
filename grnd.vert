@@ -3,8 +3,9 @@
 in vec3 coord;
 
 uniform mat4 mv;
-uniform mat4 p;
+uniform mat4 proj;
 
 void main() {
-  gl_Position = vec4(coord, 1.0);
+
+  gl_Position = proj * mv * vec4(coord, 1.0);
 }

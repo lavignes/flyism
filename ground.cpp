@@ -68,7 +68,7 @@ Ground::Ground(): shader("grnd.vert", "grnd.frag") {
     shader.get_attribute(0), 3, GL_FLOAT, false, 0, (void*)(0));
 
   shader.bind_uniform("mv", 0);
-  shader.bind_uniform("p", 1);
+  shader.bind_uniform("proj", 1);
 }
 
 Ground::~Ground() {
@@ -78,16 +78,17 @@ Ground::~Ground() {
 
 void Ground::draw() {
   glBindVertexArray(vao);
-  glBindVertexArray(vbo);
+  glUseProgram(shader.get_id());
 
-  Sim::cam_set_xpos(1.0*sin(0.0)*cos(0.0));
-  Sim::cam_set_ypos(1.0*sin(0.0)*sin(0.0));
-  Sim::cam_set_zpos(1.0*cos(0.0));
-  Sim::cam_set_yup(1.0);
+  static float t = 0;
+  Sim::set_rot_y(t);
+  t+= 1;
 
-  glUniformMatrix4fv(shader.get_uniform(0), 1, true, 
+  glUniformMatrix4fv(shader.get_uniform(0), 1, false, 
     Sim::get_view_matrix().as_array());
-  glUniformMatrix4fv(shader.get_uniform(1), 1, true, 
+  glUniformMatrix4fv(shader.get_uniform(1), 1, false, 
     Sim::get_projection_matrix().as_array());
+
+  glBindVertexArray(vbo);
   glDrawArrays(GL_TRIANGLES, 0, 36);
 }

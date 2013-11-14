@@ -10,8 +10,7 @@ Sim* Sim::self = NULL;
 list<Geometry*> Sim::geoms;
 
 vec3 Sim::cam_pos;
-vec3 Sim::cam_look;
-vec3 Sim::cam_up;
+vec3 Sim::cam_angles;
 mat4 Sim::view_matrix;
 mat4 Sim::proj_matrix;
 mat4 Sim::vp;
@@ -66,7 +65,7 @@ Sim::~Sim() {
 void Sim::init(int* argc, char* argv[], const string& title) {
   glutInit(argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-  glutInitWindowSize(800, 450);
+  glutInitWindowSize(800, 800);
   glutInitContextVersion(3, 1);
   glutInitContextProfile(GLUT_FORWARD_COMPATIBLE);
   glutInitContextProfile(GLUT_CORE_PROFILE);
@@ -99,27 +98,28 @@ void Sim::quit() {
 }
 
 void Sim::look() {
-  vec3 n = (cam_pos-cam_look).normal();
-  vec3 u3(cam_up.cross(n).normal());
-  vec3 v3(n.cross(u3).normal());
-  mat4 c(vec4(u3, 0.0), vec4(v3, 0.0), vec4(n, 0.0), vec4(0.0, 0.0, 0.0, 1.0));
-  view_matrix = c * mat4::translate(-cam_look.x, -cam_look.y, -cam_look.z);
+
+  view_matrix =
+    mat4::translate(-cam_pos.x, -cam_pos.y, -cam_pos.z);
+
+  view_matrix = view_matrix *
+                mat4::rotate_x(cam_angles.x) *
+                mat4::rotate_y(cam_angles.y) *
+                mat4::rotate_z(cam_angles.z);
 }
 
 void Sim::reshape(int width, int height) {
-  
-  glViewport(0, 0, width, height);
+  const static float near = 0.5;
+  const static float far = 3000.0;
+  float aspect = float(width) / height;
+  float th = tanf(45*deg2rad / 2);
+  proj_matrix[0][0] = 1.0 / (aspect * th);
+  proj_matrix[1][1] = 1.0 / th;
+  proj_matrix[2][2] = (far+near)/(near-far);
+  proj_matrix[3][2] = (2*far*near)/(near-far);
+  proj_matrix[2][3] = -1.0;
 
-  const float near = 0.5;
-  const float far = 1000.0;
-  const float fov = 45.0;
-  float top = tan(fov * deg2rad / 2) * near;
-  float right = top * float(width)/height;
-  proj_matrix[0][0] = near/right;
-  proj_matrix[1][1] = near/top;
-  proj_matrix[2][2] = -(far + near)/(far - near);
-  proj_matrix[2][3] = -2.0*far*near/(far - near);
-  proj_matrix[3][2] = -1.0;
+  glViewport(0, 0, width, height);
 }
 
 void Sim::draw(int value) {
@@ -149,42 +149,28 @@ bool Sim::is_key_held(int key) {
   return key_holds[key];
 }
 
-void Sim::cam_set_xpos(float x) {
+void Sim::set_cam_x(float x) {
   cam_pos.x = x;
 }
 
-void Sim::cam_set_ypos(float y) {
+void Sim::set_cam_y(float y) {
   cam_pos.y = y;
 }
 
-void Sim::cam_set_zpos(float z) {
+void Sim::set_cam_z(float z) {
   cam_pos.z = z;
 }
 
-
-void Sim::cam_set_xlook(float x) {
-  cam_look.x = x;
+void Sim::set_rot_x(float x) {
+  cam_angles.x = x;
 }
 
-void Sim::cam_set_ylook(float y) {
-  cam_look.y = y;
+void Sim::set_rot_y(float y) {
+  cam_angles.y = y;
 }
 
-void Sim::cam_set_zlook(float z) {
-  cam_look.z = z;
-}
-
-
-void Sim::cam_set_xup(float x) {
-  cam_up.x = x;
-}
-
-void Sim::cam_set_yup(float y) {
-  cam_up.y = y;
-}
-
-void Sim::cam_set_zup(float z) {
-  cam_up.z = z;
+void Sim::set_rot_z(float z) {
+  cam_angles.z = z;
 }
 
 mat4& Sim::get_view_matrix() {

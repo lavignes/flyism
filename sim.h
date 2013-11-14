@@ -25,17 +25,13 @@ class Sim {
     static bool is_key_released(int key);
     static bool is_key_held(int key);
 
-    static void cam_set_xpos(float x);
-    static void cam_set_ypos(float y);
-    static void cam_set_zpos(float z);
+    static void set_cam_x(float x);
+    static void set_cam_y(float y);
+    static void set_cam_z(float z);
 
-    static void cam_set_xlook(float x);
-    static void cam_set_ylook(float y);
-    static void cam_set_zlook(float z);
-
-    static void cam_set_xup(float x);
-    static void cam_set_yup(float y);
-    static void cam_set_zup(float z);
+    static void set_rot_x(float x);
+    static void set_rot_y(float y);
+    static void set_rot_z(float z);
 
     static mat4& get_view_matrix();
     static mat4& get_projection_matrix();
@@ -43,8 +39,7 @@ class Sim {
   protected:
 
     static vec3 cam_pos;
-    static vec3 cam_look;
-    static vec3 cam_up;
+    static vec3 cam_angles;
 
     static mat4 view_matrix;
     static mat4 proj_matrix;

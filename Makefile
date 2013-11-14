@@ -15,5 +15,9 @@ $(BIN): $(OBJS)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -o $@ -c $<
 
+play: $(BIN)
+	# This runs the game at max-fps
+	__GL_SYNC_TO_VBLANK=0 vblank_mode=0 ./$(BIN)
+
 clean:
 	rm -f $(OBJS) $(BIN)
