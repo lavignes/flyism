@@ -3,48 +3,11 @@
 #include "ground.h"
 #include "sim.h"
 
-const vec3 cube[36] = {
-  vec3(-0.5f, 0.5f, 0.5f),
-  vec3(-0.5f, -0.5f, 0.5f),
-  vec3(0.5f, 0.5f, 0.5f),
-  vec3(0.5f, 0.5f, 0.5f),
-  vec3(-0.5f, -0.5f, 0.5f),
-  vec3(0.5f, -0.5f, 0.5f),
-
-  vec3(0.5f, 0.5f, 0.5f),
-  vec3(0.5f, -0.5f, 0.5f),
-  vec3(0.5f, 0.5f, -0.5f),
-  vec3(0.5f, 0.5f, -0.5f),
-  vec3(0.5f, -0.5f, 0.5f),
-  vec3(0.5f, -0.5f, -0.5f),
-
-  vec3(0.5f, 0.5f, -0.5f),
-  vec3(0.5f, -0.5f, -0.5f),
-  vec3(-0.5f, 0.5f, -0.5f),
-  vec3(-0.5f, 0.5f, -0.5f),
-  vec3(0.5f, -0.5f, -0.5f),
-  vec3(-0.5f, -0.5f, -0.5f),
-
-  vec3(-0.5f, 0.5f, -0.5f),
-  vec3(-0.5f, -0.5f, -0.5f),
-  vec3(-0.5f, 0.5f, 0.5f),
-  vec3(-0.5f, 0.5f, 0.5f),
-  vec3(-0.5f, -0.5f, -0.5f),
-  vec3(-0.5f, -0.5f, 0.5f),
-
-  vec3(-0.5f, 0.5f, -0.5f),
-  vec3(-0.5f, 0.5f, 0.5f),
-  vec3(0.5f, 0.5f, -0.5f),
-  vec3(0.5f, 0.5f, -0.5f),
-  vec3(-0.5f, 0.5f, 0.5f),
-  vec3(0.5f, 0.5f, 0.5f),
-
-  vec3(-0.5f, -0.5f, 0.5f),
-  vec3(-0.5f, -0.5f, -0.5f),
-  vec3(0.5f, -0.5f, 0.5f),
-  vec3(0.5f, -0.5f, 0.5f),
-  vec3(-0.5f, -0.5f, -0.5f),
-  vec3(0.5f, -0.5f, -0.5f)
+const vec3 GROUND[4] = {
+  vec3(-2000.0f, 0.0f, -2000.0f),
+  vec3(-2000.0f, 0.0f, 2000.0f),
+  vec3(2000.0f, 1.0f, -2000.0f),
+  vec3(2000.0f, 1.0f, 2000.0f),
 };
 
 Ground::Ground(): shader("grnd.vert", "grnd.frag") {
@@ -57,7 +20,7 @@ Ground::Ground(): shader("grnd.vert", "grnd.frag") {
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER,
-    sizeof(cube), cube, GL_STATIC_DRAW);
+    sizeof(GROUND), GROUND, GL_STATIC_DRAW);
 
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
@@ -80,15 +43,11 @@ void Ground::draw() {
   glBindVertexArray(vao);
   glUseProgram(shader.get_id());
 
-  static float t = 0;
-  Sim::set_rot_y(t);
-  t+= 1;
-
   glUniformMatrix4fv(shader.get_uniform(0), 1, false, 
     Sim::get_view_matrix().as_array());
   glUniformMatrix4fv(shader.get_uniform(1), 1, false, 
     Sim::get_projection_matrix().as_array());
 
   glBindVertexArray(vbo);
-  glDrawArrays(GL_TRIANGLES, 0, 36);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

@@ -8,6 +8,8 @@ using namespace std;
 #include "geometry.h"
 #include "maths.h"
 
+#define DEG2RAD (M_PI * 2.0f) / 360.0f
+
 class Sim {
 
   public:
@@ -36,6 +38,8 @@ class Sim {
     static mat4& get_view_matrix();
     static mat4& get_projection_matrix();
 
+    static void set_phys_callback(void (*cb)(void*), void* data);
+
   protected:
 
     static vec3 cam_pos;
@@ -51,6 +55,9 @@ class Sim {
     static void reshape(int,int);
     static list<Geometry*> geoms;
     static Sim* self;
+    static void (*callback)(void*);
+    static void* cb_data;
+
     static void keyboard_clear();
     static void keyboard_down(unsigned char, int, int);
     static void keyboard_up(unsigned char, int, int);

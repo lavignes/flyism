@@ -4,8 +4,6 @@
 
 #include "sim.h"
 
-#define deg2rad (M_PI * 2.0f) / 360.0f
-
 Sim* Sim::self = NULL;
 list<Geometry*> Sim::geoms;
 
@@ -14,6 +12,9 @@ vec3 Sim::cam_angles;
 mat4 Sim::view_matrix;
 mat4 Sim::proj_matrix;
 mat4 Sim::vp;
+
+void (*Sim::callback)(void*)  = NULL;
+void* Sim::cb_data = NULL;
 
 bool Sim::key_presses[256];
 bool Sim::key_releases[256];
@@ -102,17 +103,18 @@ void Sim::look() {
   view_matrix =
     mat4::translate(-cam_pos.x, -cam_pos.y, -cam_pos.z);
 
+  // Default field rotation is 90 on y
   view_matrix = view_matrix *
-                mat4::rotate_x(cam_angles.x) *
-                mat4::rotate_y(cam_angles.y) *
+                mat4::rotate_y(cam_angles.y-90) *
+                mat4::rotate_x(cam_angles.x) * 
                 mat4::rotate_z(cam_angles.z);
 }
 
 void Sim::reshape(int width, int height) {
-  const static float near = 0.5;
+  const static float near = 0.0001;
   const static float far = 3000.0;
   float aspect = float(width) / height;
-  float th = tanf(45*deg2rad / 2);
+  float th = tanf(45*DEG2RAD / 2);
   proj_matrix[0][0] = 1.0 / (aspect * th);
   proj_matrix[1][1] = 1.0 / th;
   proj_matrix[2][2] = (far+near)/(near-far);
@@ -125,6 +127,8 @@ void Sim::reshape(int width, int height) {
 void Sim::draw(int value) {
   keyboard_clear();
   look();
+  if (callback)
+    callback(cb_data);
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -179,4 +183,9 @@ mat4& Sim::get_view_matrix() {
 
 mat4& Sim::get_projection_matrix() {
   return proj_matrix;
+}
+
+void Sim::set_phys_callback(void (*cb)(void*), void* data) {
+  callback = cb;
+  cb_data = data;
 }
