@@ -8,8 +8,6 @@ using namespace std;
 #include "geometry.h"
 #include "maths.h"
 
-#define DEG2RAD (M_PI * 2.0f) / 360.0f
-
 class Sim {
 
   public:
