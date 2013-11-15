@@ -8,20 +8,21 @@
  * instrumentation (compass)
  * speed indicator
  * altimeter
- *
- * rotation speed should be proportional to velocity
  * 
  */
 
 struct SimState {
   Plane plane;
   Ground ground;
-  SimState(): plane(0.0, 0.0, 0.0) {}
+  SimState(): plane(0.0, 10.0, 0.0) {}
 };
 
 void phys_callback(float dt, SimState* ss) {
 
   ss->plane.phys(dt);
+
+  if (Sim::is_key_pressed('\e'))
+    Sim::quit();
 
   if (Sim::is_key_held('a'))
     ss->plane.set_roll(ss->plane.get_roll() + 8.0 * dt);

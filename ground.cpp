@@ -1,26 +1,53 @@
 #include <GL/glew.h>
-
+#include <stdlib.h>
 #include "ground.h"
 #include "sim.h"
 
-const vec3 GROUND[4] = {
-  vec3(-2000.0f, 0.0f, -2000.0f),
-  vec3(-2000.0f, 0.0f, 2000.0f),
-  vec3(2000.0f, 0.0f, -2000.0f),
-  vec3(2000.0f, 0.0f, 2000.0f),
-};
-
 Ground::Ground(): shader("grnd.vert", "grnd.frag") {
-  for (int j = 0; j < 16; j++) {
-    for (int i = 0; i < 16; i++) {
-      ground_points[i][j] = vec3(i*100.0, j*100.0, 0.0);
+  int rows = 1600, cols = 1600;
+
+  vec3* ground_points = new vec3[rows*cols];
+  std::vector<unsigned> indices;
+
+  for (int j = 0; j < rows; j++) {
+    for (int i = 0; i < cols; i++) {
+      ground_points[i+j*cols] = vec3((-(rows/2)+i)*256.0, (0.1 * float(rand()%80))-0.5, (-(cols/2)+j)*256.0);
+    }
+  }
+
+  unsigned n = 0;
+  int colSteps = cols * 2;
+  int rowSteps = rows - 1;
+  for (int r = 0; r < rowSteps; r++) {
+    for (int c = 0; c < colSteps; c++) {
+      int t = c + r * colSteps;
+
+      if (c == colSteps - 1) {
+        indices.push_back(n);
+      } else {
+        indices.push_back(n);
+
+        if (t%2 == 0) {
+          n += cols;
+        }
+        else {
+          (r%2 == 0)? n -= (cols-1) : n -= (cols+1);
+        }
+      }
     }
   }
 
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER,
-    sizeof(GROUND), GROUND, GL_STATIC_DRAW);
+    sizeof(vec3) * rows * cols, ground_points, GL_STATIC_DRAW);
+
+  delete ground_points;
+
+  glGenBuffers(1, &ibo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+     indices.size() * sizeof(unsigned), &indices[0], GL_STATIC_DRAW);
 
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
@@ -36,6 +63,7 @@ Ground::Ground(): shader("grnd.vert", "grnd.frag") {
 
 Ground::~Ground() {
   glDeleteBuffers(1, &vbo);
+  glDeleteBuffers(1, &ibo);
   glDeleteVertexArrays(1, &vao);
 }
 
@@ -49,5 +77,6 @@ void Ground::draw() {
     Sim::get_projection_matrix().as_array());
 
   glBindVertexArray(vbo);
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+  glDrawElements(GL_TRIANGLE_STRIP, 5116800, GL_UNSIGNED_INT, (void*)(0));
 }

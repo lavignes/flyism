@@ -1,6 +1,8 @@
 #ifndef GROUND_H
 #define GROUND_H
 
+#include <vector>
+
 #include "geometry.h"
 #include "maths.h"
 #include "shader.h"
@@ -12,9 +14,9 @@ class Ground: public Geometry {
     virtual void draw();
 
   protected:
-    vec3 ground_points[16][16];
     Pipeline shader;
     unsigned vbo;
+    unsigned ibo;
     unsigned vao;
 };
 

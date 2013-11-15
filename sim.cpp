@@ -86,7 +86,7 @@ void Sim::init(int* argc, char* argv[], const string& title) {
 
   glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
   glEnable(GL_DEPTH_TEST);
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClearColor(0.0, 0.749019608, 1.0, 1.0);
 }
 
 void Sim::add_geometry(Geometry* geom) {
@@ -141,8 +141,8 @@ void Sim::look() {
 }
 
 void Sim::reshape(int width, int height) {
-  const static float near = 0.0001;
-  const static float far = 3000.0;
+  const static float near = 0.1;
+  const static float far = 30000.0;
   float aspect = float(width) / height;
   float th = tanf(45*DEG2RAD / 2);
   proj_matrix[0][0] = 1.0 / (aspect * th);
