@@ -3,6 +3,7 @@
 #include "sim.h"
 #include "ground.h"
 #include "plane.h"
+
 /**
  * Ideas:
  * instrumentation (compass)
@@ -25,8 +26,13 @@ void phys_callback(float dt, SimState* ss) {
     Sim::quit();
 
   if (Sim::is_key_held('a'))
-    ss->plane.set_roll(ss->plane.get_roll() + 8.0 * dt);
+    ss->plane.set_yaw(ss->plane.get_yaw() + 8.0 * dt);
   else if (Sim::is_key_held('d'))
+    ss->plane.set_yaw(ss->plane.get_yaw() - 8.0 * dt);
+
+  if (Sim::is_key_held('q'))
+    ss->plane.set_roll(ss->plane.get_roll() + 8.0 * dt);
+  else if (Sim::is_key_held('e'))
     ss->plane.set_roll(ss->plane.get_roll() - 8.0 * dt);
 
   if (Sim::is_key_held('w'))

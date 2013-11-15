@@ -44,6 +44,10 @@ float Plane::get_yaw() {
   return yaw;
 }
 
+void Plane::set_yaw(float yaw) {
+  this->yaw = yaw;
+}
+
 float Plane::get_speed() {
   return v;
 }

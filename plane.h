@@ -20,6 +20,7 @@ class Plane {
     void set_speed(float speed);
 
     float get_yaw();
+    void set_yaw(float yaw);
     
   private:
     float x, y, z;

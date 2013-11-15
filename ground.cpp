@@ -11,27 +11,29 @@ Ground::Ground(): shader("grnd.vert", "grnd.frag") {
 
   for (int j = 0; j < rows; j++) {
     for (int i = 0; i < cols; i++) {
-      ground_points[i+j*cols] = vec3((-(rows/2)+i)*256.0, (0.1 * float(rand()%80))-0.5, (-(cols/2)+j)*256.0);
+      ground_points[i+j*cols] = vec3(
+        (-(rows/2)+i)*256.0,
+        (0.1 * float(rand()%80))-0.5,
+        (-(cols/2)+j)*256.0);
     }
   }
 
   unsigned n = 0;
-  int colSteps = cols * 2;
-  int rowSteps = rows - 1;
-  for (int r = 0; r < rowSteps; r++) {
-    for (int c = 0; c < colSteps; c++) {
-      int t = c + r * colSteps;
-
-      if (c == colSteps - 1) {
+  int cs = cols * 2;
+  int rs = rows - 1;
+  for (int j = 0; j < rs; j++) {
+    for (int i = 0; i < cs; i++) {
+      int t = i + j * cs;
+      if (i == cs - 1) {
         indices.push_back(n);
       } else {
         indices.push_back(n);
-
-        if (t%2 == 0) {
+        if (t % 2 == 0) {
           n += cols;
-        }
-        else {
-          (r%2 == 0)? n -= (cols-1) : n -= (cols+1);
+        } else if (j % 2 == 0) {
+          n -= cols - 1;
+        } else {
+          n -= cols + 1;
         }
       }
     }
