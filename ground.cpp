@@ -37,6 +37,8 @@ Ground::Ground(): shader("grnd.vert", "grnd.frag") {
     }
   }
 
+  n_indicies = indices.size();
+
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER,
@@ -47,7 +49,7 @@ Ground::Ground(): shader("grnd.vert", "grnd.frag") {
   glGenBuffers(1, &ibo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-     indices.size() * sizeof(unsigned), &indices[0], GL_STATIC_DRAW);
+     n_indicies * sizeof(unsigned), &indices[0], GL_STATIC_DRAW);
 
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
@@ -78,5 +80,5 @@ void Ground::draw() {
 
   glBindVertexArray(vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-  glDrawElements(GL_TRIANGLE_STRIP, 5116800, GL_UNSIGNED_INT, (void*)(0));
+  glDrawElements(GL_TRIANGLE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
 }

@@ -15,6 +15,7 @@ class Ground: public Geometry {
 
   protected:
     Pipeline shader;
+    unsigned n_indicies;
     unsigned vbo;
     unsigned ibo;
     unsigned vao;
