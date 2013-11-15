@@ -4,7 +4,7 @@
 #include "sim.h"
 
 Ground::Ground(): shader("grnd.vert", "grnd.frag") {
-  int rows = 1600, cols = 1600;
+  int rows = 400, cols = 400;
 
   vec3* ground_points = new vec3[rows*cols];
   std::vector<unsigned> indices;
