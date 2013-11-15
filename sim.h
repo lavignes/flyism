@@ -36,7 +36,7 @@ class Sim {
     static mat4& get_view_matrix();
     static mat4& get_projection_matrix();
 
-    static void set_phys_callback(void (*cb)(void*), void* data);
+    static void set_phys_callback(void (*cb)(float,void*), void* data);
 
   protected:
 
@@ -48,13 +48,13 @@ class Sim {
     static mat4 vp;
 
     Sim();
-    static void draw(int);
     static void look();
     static void reshape(int,int);
     static list<Geometry*> geoms;
     static Sim* self;
-    static void (*callback)(void*);
+    static void (*callback)(float,void*);
     static void* cb_data;
+    static bool running;
 
     static void keyboard_clear();
     static void keyboard_down(unsigned char, int, int);

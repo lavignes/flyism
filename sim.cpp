@@ -15,8 +15,10 @@ mat4 Sim::view_matrix;
 mat4 Sim::proj_matrix;
 mat4 Sim::vp;
 
-void (*Sim::callback)(void*)  = NULL;
+void (*Sim::callback)(float,void*)  = NULL;
 void* Sim::cb_data = NULL;
+
+bool Sim::running = false;
 
 bool Sim::key_presses[256];
 bool Sim::key_releases[256];
@@ -91,13 +93,39 @@ void Sim::add_geometry(Geometry* geom) {
   geoms.push_back(geom);
 }
 
+static uint64_t raw_time() {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (uint64_t) ts.tv_sec * (uint64_t) 1000000000 + (uint64_t) ts.tv_nsec;
+}
+
 void Sim::run() {
-  glutTimerFunc(16.6667, draw, 0);
-  glutMainLoop();
+  running = true;
+  float t0 = 0, t1 = 0, dt = 0;
+  clock_t start_time = raw_time();
+  while (running) {
+    t1 = (float) (raw_time() - start_time) * 1e-9;
+    dt = t1 - t0;
+    t0 = t1;
+    keyboard_clear();
+    glutMainLoopEvent();
+    look();
+    if (callback)
+      callback(dt, cb_data);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    list<Geometry*>::iterator g, end = geoms.end();
+    for(g = geoms.begin(); g != end; g++) {
+      (*g)->draw();
+    }
+
+    glutSwapBuffers();
+  }
 }
 
 void Sim::quit() {
-  glutLeaveMainLoop();
+  running = false;
 }
 
 void Sim::look() {
@@ -124,23 +152,6 @@ void Sim::reshape(int width, int height) {
   proj_matrix[2][3] = -1.0;
 
   glViewport(0, 0, width, height);
-}
-
-void Sim::draw(int value) {
-  keyboard_clear();
-  look();
-  if (callback)
-    callback(cb_data);
-
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  list<Geometry*>::iterator g, end = geoms.end();
-  for(g = geoms.begin(); g != end; g++) {
-    (*g)->draw();
-  }
-
-  glutSwapBuffers();
-  glutTimerFunc(16.6667, draw, 0);
 }
 
 bool Sim::is_key_pressed(int key) {
@@ -187,7 +198,7 @@ mat4& Sim::get_projection_matrix() {
   return proj_matrix;
 }
 
-void Sim::set_phys_callback(void (*cb)(void*), void* data) {
+void Sim::set_phys_callback(void (*cb)(float,void*), void* data) {
   callback = cb;
   cb_data = data;
 }
