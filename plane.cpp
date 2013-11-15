@@ -64,7 +64,7 @@ void Plane::phys(float dt) {
 
   x += v*cosf(DEG2RAD * yaw) * dt;
   z -= v*sinf(DEG2RAD * yaw) * dt;
-  y += n * (v * sinf(DEG2RAD * pitch) - v * fabs(sinf(DEG2RAD * roll))) * dt;
+  y += n * (v * sinf(DEG2RAD * pitch) - v * fabs(sinf(DEG2RAD * roll) * 0.5)) * dt;
 
   if (y < 8.0)
     y = 8.0;
