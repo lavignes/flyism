@@ -90,4 +90,5 @@ void Ground::draw(float dt) {
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
   glDrawElements(GL_TRIANGLE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

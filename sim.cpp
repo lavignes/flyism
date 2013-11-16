@@ -85,7 +85,7 @@ void Sim::init(int* argc, char* argv[], const string& title) {
   glutSpecialFunc(keyboard_special_down);
   glutSpecialUpFunc(keyboard_special_up);
   glutReshapeFunc(reshape);
-
+  
   glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_TEXTURE_2D);

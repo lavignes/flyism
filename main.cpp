@@ -6,7 +6,7 @@
 #include "ground.h"
 #include "plane.h"
 #include "building.h"
-//#include "tree.h"
+#include "tree.h"
 #include "maths.h"
 
 #define DEG2RAD (M_PI * 2.0f) / 360.0f
@@ -25,7 +25,7 @@ struct SimState {
   Plane plane;
   Ground ground;
   list<Building*> buildings;
-  //list<Tree*> trees;
+  list<Tree*> trees;
   SimState():
     plane(0.0, 100.0, 0.0),
     ground("grnd.bmp")
@@ -35,7 +35,7 @@ struct SimState {
     buildings.push_back(new Building(3160.0, 70.0, 1400.0, 45.0, 7.0));
     buildings.push_back(new Building(3264.0, 70.0, 1664.0, 0.0, 2.0));
     
-    //trees.push_back(new Tree(3200.0, 200.0, 1600.0));
+    trees.push_back(new Tree(3200.0, 200.0, 1600.0));
   }
   ~SimState() {
     for (list<Building*>::iterator
@@ -45,13 +45,13 @@ struct SimState {
     {
       delete *i;
     }
-    // for (list<Tree*>::iterator
-    //   i = trees.begin();
-    //   i != trees.end();
-    //   i++)
-    // {
-    //   delete *i;
-    // }
+    for (list<Tree*>::iterator
+      i = trees.begin();
+      i != trees.end();
+      i++)
+    {
+      delete *i;
+    }
   }
 };
 
@@ -132,13 +132,13 @@ int main(int argc, char* argv[]) {
     Sim::add_geometry(*i);
   }
 
-  // for (list<Tree*>::iterator
-  //   i = ss.trees.begin();
-  //   i != ss.trees.end();
-  //   i++)
-  // {
-  //   Sim::add_geometry(*i);
-  // }
+  for (list<Tree*>::iterator
+    i = ss.trees.begin();
+    i != ss.trees.end();
+    i++)
+  {
+    Sim::add_geometry(*i);
+  }
   
   Sim::set_phys_callback((void(*)(float, void*)) phys_callback, &ss);
   Sim::run();

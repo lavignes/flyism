@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <GL/glew.h>
 
 #include "building.h"
@@ -65,10 +63,14 @@ Building::Building(float x, float y, float z, float rot, float height) {
   shader = (shader)? shader : new Pipeline("bldg.vert", "bldg.frag");
   shader_count++;
 
-  if (vao == 0) {
+  if (vao == 0 && vbo == 0) {
+    glUseProgram(shader->get_id());
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-    glUseProgram(shader->get_id());
+
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
 
     shader->bind_attribute("coord", 0);
     glEnableVertexAttribArray(shader->get_attribute(0));
@@ -77,12 +79,6 @@ Building::Building(float x, float y, float z, float rot, float height) {
 
     shader->bind_uniform("mv", 0);
     shader->bind_uniform("proj", 1);
-  }
-
-  if (vbo == 0) {
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
   }
 }
 
@@ -96,8 +92,8 @@ Building::~Building() {
 }
 
 void Building::draw(float dt) {
-  glUseProgram(shader->get_id());
   glBindVertexArray(vao);
+  glUseProgram(shader->get_id());
 
   mat4 mv = Sim::get_view_matrix();
 
@@ -112,7 +108,7 @@ void Building::draw(float dt) {
     Sim::get_projection_matrix().as_array());
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glDrawArrays(GL_LINE_LOOP, 0, 36);
+  glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 float Building::get_x() {
