@@ -78,7 +78,7 @@ Ground::~Ground() {
   glDeleteVertexArrays(1, &vao);
 }
 
-void Ground::draw() {
+void Ground::draw(float dt) {
   glBindVertexArray(vao);
   glUseProgram(shader.get_id());
 
@@ -89,5 +89,5 @@ void Ground::draw() {
 
   glBindVertexArray(vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-  glDrawElements(GL_TRIANGLE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
+  glDrawElements(GL_LINE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
 }

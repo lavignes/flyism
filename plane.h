@@ -10,6 +10,10 @@ class Plane {
     float get_y();
     float get_z();
 
+    void set_x(float x);
+    void set_y(float y);
+    void set_z(float z);
+
     float get_roll();
     void set_roll(float roll);
 

@@ -3,7 +3,7 @@
 
 class Geometry {
   public:
-    virtual void draw() = 0;
+    virtual void draw(float dt) = 0;
 };
 
 #endif /* GEOMETRY_H */

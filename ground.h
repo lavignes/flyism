@@ -12,8 +12,8 @@ class Ground: public Geometry {
   public:
     Ground(const std::string& texture);
     virtual ~Ground();
-    virtual void draw();
-
+    virtual void draw(float dt);
+    
   protected:
     Pipeline shader;
     Bitmap tex;

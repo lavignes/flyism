@@ -26,31 +26,31 @@ void phys_callback(float dt, SimState* ss) {
     Sim::quit();
 
   if (Sim::is_key_held('a'))
-    ss->plane.set_yaw(ss->plane.get_yaw() + 8.0 * dt);
+    ss->plane.set_yaw(ss->plane.get_yaw() + 12.0 * dt);
   else if (Sim::is_key_held('d'))
-    ss->plane.set_yaw(ss->plane.get_yaw() - 8.0 * dt);
+    ss->plane.set_yaw(ss->plane.get_yaw() - 12.0 * dt);
 
   if (Sim::is_key_held('q'))
-    ss->plane.set_roll(ss->plane.get_roll() + 8.0 * dt);
+    ss->plane.set_roll(ss->plane.get_roll() + 12.0 * dt);
   else if (Sim::is_key_held('e'))
-    ss->plane.set_roll(ss->plane.get_roll() - 8.0 * dt);
+    ss->plane.set_roll(ss->plane.get_roll() - 12.0 * dt);
 
   if (Sim::is_key_held('w'))
-    ss->plane.set_pitch(ss->plane.get_pitch() - 8.0 * dt);
+    ss->plane.set_pitch(ss->plane.get_pitch() - 12.0 * dt);
   else if (Sim::is_key_held('s'))
-    ss->plane.set_pitch(ss->plane.get_pitch() + 8.0 * dt);
+    ss->plane.set_pitch(ss->plane.get_pitch() + 12.0 * dt);
 
   if (Sim::is_key_held('p'))
-    ss->plane.set_speed(ss->plane.get_speed() + 8.0 * dt);
+    ss->plane.set_speed(ss->plane.get_speed() + 12.0 * dt);
   else if (Sim::is_key_held('l'))
-    ss->plane.set_speed(ss->plane.get_speed() - 8.0 * dt);
+    ss->plane.set_speed(ss->plane.get_speed() - 12.0 * dt);
 
-  printf("(%4.2f, %4.2f) -> As: %4.2f Alt: %4.2fm Heading: %4.2f°\n",
-    ss->plane.get_x(),
-    ss->plane.get_z(),
-    ss->plane.get_speed(),
-    ss->plane.get_y(),
-    ss->plane.get_yaw());
+  // printf("(%4.2f, %4.2f) -> As: %4.2f Alt: %4.2fm Heading: %4.2f°\n",
+  //   ss->plane.get_x(),
+  //   ss->plane.get_z(),
+  //   ss->plane.get_speed(),
+  //   ss->plane.get_y(),
+  //   ss->plane.get_yaw());
 
   Sim::set_cam_x(ss->plane.get_x());
   Sim::set_cam_y(ss->plane.get_y());

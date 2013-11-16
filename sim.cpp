@@ -117,7 +117,7 @@ void Sim::run() {
 
     list<Geometry*>::iterator g, end = geoms.end();
     for(g = geoms.begin(); g != end; g++) {
-      (*g)->draw();
+      (*g)->draw(t1);
     }
 
     glutSwapBuffers();
@@ -142,9 +142,9 @@ void Sim::look() {
 
 void Sim::reshape(int width, int height) {
   const static float near = 0.1;
-  const static float far = 30000.0;
+  const static float far = 6000.0;
   float aspect = float(width) / height;
-  float th = tanf(45*DEG2RAD / 2);
+  float th = tanf(60.0*DEG2RAD / 2.0);
   proj_matrix[0][0] = 1.0 / (aspect * th);
   proj_matrix[1][1] = 1.0 / th;
   proj_matrix[2][2] = (far+near)/(near-far);
