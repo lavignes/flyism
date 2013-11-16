@@ -2,6 +2,8 @@
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 
+#include <stdio.h>
+
 #include "sim.h"
 
 #define DEG2RAD (M_PI * 2.0f) / 360.0f
@@ -86,6 +88,7 @@ void Sim::init(int* argc, char* argv[], const string& title) {
 
   glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_TEXTURE_2D);
   glClearColor(0.0, 0.749019608, 1.0, 1.0);
 }
 
@@ -102,11 +105,21 @@ static uint64_t raw_time() {
 void Sim::run() {
   running = true;
   float t0 = 0, t1 = 0, dt = 0;
+  float ft = 0, f = 0, fps = 0;
   clock_t start_time = raw_time();
   while (running) {
     t1 = (float) (raw_time() - start_time) * 1e-9;
     dt = t1 - t0;
     t0 = t1;
+
+    if (f > 60) {
+      fps = f / (t1 - ft);
+      printf("%.1lf fps\n", fps);
+      ft = t0;
+      f = 0;
+    }
+    f++;
+
     keyboard_clear();
     glutMainLoopEvent();
     look();

@@ -3,7 +3,7 @@
 out vec4 color;
 
 void main() {
-  const float L1 = 5.442695;
+  const float L1 = 2.442695;
   float z = gl_FragCoord.z / gl_FragCoord.w;
   float fogFactor = exp2( -0.0002 * 0.0002 * z * z * L1);
   fogFactor = clamp(fogFactor, 0.0, 1.0);

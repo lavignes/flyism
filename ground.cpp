@@ -19,9 +19,9 @@ Ground::Ground(const string& texture):
   for (int j = 0; j < rows; j++) {
     for (int i = 0; i < cols; i++) {
       ground_points[i+j*cols] = vec3(
-        (-(rows/2)+i)*16.0,
-        tex.intensity_at(i+j*cols) * 100.0,
-        (-(cols/2)+j)*16.0);
+        (-(rows/2)+i)*32.0,
+        tex.intensity_at(i+j*cols) * 200.0,
+        (-(cols/2)+j)*32.0);
     }
   }
 
@@ -60,9 +60,9 @@ Ground::Ground(const string& texture):
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
      n_indicies * sizeof(unsigned), &indices[0], GL_STATIC_DRAW);
 
+  glUseProgram(shader.get_id());
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
-  glUseProgram(shader.get_id());
   shader.bind_attribute("coord", 0);
   glEnableVertexAttribArray(shader.get_attribute(0));
   glVertexAttribPointer(
@@ -79,15 +79,15 @@ Ground::~Ground() {
 }
 
 void Ground::draw(float dt) {
-  glBindVertexArray(vao);
   glUseProgram(shader.get_id());
+  glBindVertexArray(vao);
 
   glUniformMatrix4fv(shader.get_uniform(0), 1, false, 
     Sim::get_view_matrix().as_array());
   glUniformMatrix4fv(shader.get_uniform(1), 1, false, 
     Sim::get_projection_matrix().as_array());
 
-  glBindVertexArray(vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
   glDrawElements(GL_TRIANGLE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
 }
