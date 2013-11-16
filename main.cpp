@@ -15,7 +15,7 @@
 struct SimState {
   Plane plane;
   Ground ground;
-  SimState(): plane(0.0, 10.0, 0.0) {}
+  SimState(): plane(0.0, 100.0, 0.0), ground("grnd.bmp") {}
 };
 
 void phys_callback(float dt, SimState* ss) {

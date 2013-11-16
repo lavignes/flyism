@@ -1,20 +1,22 @@
 #ifndef GROUND_H
 #define GROUND_H
 
-#include <vector>
+#include <string>
 
 #include "geometry.h"
 #include "maths.h"
 #include "shader.h"
+#include "bitmap.h"
 
 class Ground: public Geometry {
   public:
-    Ground();
+    Ground(const std::string& texture);
     virtual ~Ground();
     virtual void draw();
 
   protected:
     Pipeline shader;
+    Bitmap tex;
     unsigned n_indicies;
     unsigned vbo;
     unsigned ibo;

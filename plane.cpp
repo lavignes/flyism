@@ -58,8 +58,7 @@ void Plane::set_speed(float speed) {
 
 void Plane::phys(float dt) {
   int n =  -2 * ((roll > 90.0) || (roll < -90.0)) + 1;
-
-  float yaw_d = asinf(sinf(DEG2RAD * roll) * sinf(DEG2RAD * pitch)) * 30.0;
+  float yaw_d = asinf(sinf(DEG2RAD * roll) * sinf(DEG2RAD * pitch))*50.0;
   if (yaw_d > 8.0)
     yaw_d = 8.0;
   else if (yaw_d < -8.0)

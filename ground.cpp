@@ -1,10 +1,17 @@
 #include <GL/glew.h>
 #include <stdlib.h>
+
+#include <vector>
+
 #include "ground.h"
 #include "sim.h"
 
-Ground::Ground(): shader("grnd.vert", "grnd.frag") {
-  int rows = 400, cols = 400;
+using namespace std;
+
+Ground::Ground(const string& texture):
+  shader("grnd.vert", "grnd.frag"), tex(texture)
+{
+  int rows = tex.get_width(), cols = tex.get_height();
 
   vec3* ground_points = new vec3[rows*cols];
   std::vector<unsigned> indices;
@@ -12,9 +19,9 @@ Ground::Ground(): shader("grnd.vert", "grnd.frag") {
   for (int j = 0; j < rows; j++) {
     for (int i = 0; i < cols; i++) {
       ground_points[i+j*cols] = vec3(
-        (-(rows/2)+i)*256.0,
-        (0.1 * float(rand()%80))-0.5,
-        (-(cols/2)+j)*256.0);
+        (-(rows/2)+i)*32.0,
+        tex.intensity_at(i+j*cols) * 100.0,
+        (-(cols/2)+j)*32.0);
     }
   }
 
