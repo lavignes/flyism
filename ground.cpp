@@ -19,9 +19,9 @@ Ground::Ground(const string& texture):
   for (int j = 0; j < rows; j++) {
     for (int i = 0; i < cols; i++) {
       ground_points[i+j*cols] = vec3(
-        (-(rows/2)+i)*32.0,
+        (-(rows/2)+i)*16.0,
         tex.intensity_at(i+j*cols) * 100.0,
-        (-(cols/2)+j)*32.0);
+        (-(cols/2)+j)*16.0);
     }
   }
 
@@ -89,5 +89,5 @@ void Ground::draw(float dt) {
 
   glBindVertexArray(vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-  glDrawElements(GL_LINE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
+  glDrawElements(GL_TRIANGLE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
 }

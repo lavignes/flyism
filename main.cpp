@@ -1,8 +1,14 @@
 #include <stdio.h>
 
+#include <list>
+
 #include "sim.h"
 #include "ground.h"
 #include "plane.h"
+#include "building.h"
+#include "maths.h"
+
+#define DEG2RAD (M_PI * 2.0f) / 360.0f
 
 /**
  * Ideas:
@@ -12,13 +18,36 @@
  * 
  */
 
+using namespace std;
+
 struct SimState {
   Plane plane;
   Ground ground;
-  SimState(): plane(0.0, 100.0, 0.0), ground("grnd.bmp") {}
+  list<Building*> buildings;
+  SimState():
+    plane(0.0, 100.0, 0.0),
+    ground("grnd.bmp")
+  {
+    buildings.push_back(new Building(1600.0, 40.0, 800.0, 16.0, 1.0));
+    buildings.push_back(new Building(1500.0, 35.0, 700.0, 45.0, 8.0));
+    buildings.push_back(new Building(1580.0, 35.0, 700.0, 45.0, 7.0));
+    buildings.push_back(new Building(1632.0, 35.0, 832.0, 0.0, 2.0));
+  }
+  ~SimState() {
+    for (list<Building*>::iterator
+      i = buildings.begin();
+      i != buildings.end();
+      i++)
+    {
+      delete *i;
+    }
+  }
 };
 
 void phys_callback(float dt, SimState* ss) {
+
+  float ox = ss->plane.get_x();
+  float oz = ss->plane.get_z();
 
   ss->plane.phys(dt);
 
@@ -52,6 +81,23 @@ void phys_callback(float dt, SimState* ss) {
   //   ss->plane.get_y(),
   //   ss->plane.get_yaw());
 
+  for (list<Building*>::iterator
+    i = ss->buildings.begin();
+    i != ss->buildings.end();
+    i++)
+  {
+    float d = sqrtf((ox-(*i)->get_x())*(ox-(*i)->get_x()) +
+      (oz-(*i)->get_z())*(oz-(*i)->get_z()));
+    if (d < 20.0) {
+      ox += ss->plane.get_speed() * cosf(DEG2RAD * -ss->plane.get_yaw()) * dt;
+      oz -= ss->plane.get_speed() * sinf(DEG2RAD * -ss->plane.get_yaw()) * dt;
+      ss->plane.set_yaw(ss->plane.get_yaw() - 12.0 * dt);
+      ss->plane.set_x(ox);
+      ss->plane.set_z(oz);
+      break;
+    }
+  }
+
   Sim::set_cam_x(ss->plane.get_x());
   Sim::set_cam_y(ss->plane.get_y());
   Sim::set_cam_z(ss->plane.get_z());
@@ -67,6 +113,14 @@ int main(int argc, char* argv[]) {
   SimState ss;
   Sim::add_geometry(&ss.ground);
 
+  for (list<Building*>::iterator
+    i = ss.buildings.begin();
+    i != ss.buildings.end();
+    i++)
+  {
+    Sim::add_geometry(*i);
+  }
+  
   Sim::set_phys_callback((void(*)(float, void*)) phys_callback, &ss);
   Sim::run();
 
