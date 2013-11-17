@@ -88,7 +88,7 @@ void Tree::draw(float dt) {
   glUniformMatrix4fv(shader->get_uniform(1), 1, false, 
     Sim::get_projection_matrix().as_array());
 
-  glActiveTexture(GL_TEXTURE0);
+  glActiveTexture(GL_TEXTURE0 + shader->get_uniform(2));
   glBindTexture(GL_TEXTURE_2D, tex->get_id());
   glUniform1i(shader->get_uniform(2), 0);
   
