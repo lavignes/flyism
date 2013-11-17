@@ -21,6 +21,7 @@ void (*Sim::callback)(float,void*)  = NULL;
 void* Sim::cb_data = NULL;
 
 bool Sim::running = false;
+bool Sim::wire = false;
 
 bool Sim::key_presses[256];
 bool Sim::key_releases[256];
@@ -89,6 +90,8 @@ void Sim::init(int* argc, char* argv[], const string& title) {
   glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_TEXTURE_2D);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glClearColor(0.0, 0.749019608, 1.0, 1.0);
 }
 
@@ -143,14 +146,16 @@ void Sim::quit() {
 
 void Sim::look() {
 
-  view_matrix =
-    mat4::translate(-cam_pos.x, -cam_pos.y, -cam_pos.z);
 
   // Default field rotation is 90 on y
-  view_matrix = view_matrix *
-                mat4::rotate_y(cam_angles.y-90) *
-                mat4::rotate_x(cam_angles.x) * 
-                mat4::rotate_z(cam_angles.z);
+  view_matrix =
+    mat4::rotate_y(cam_angles.y-90) *
+    mat4::rotate_x(cam_angles.x) * 
+    mat4::rotate_z(cam_angles.z);
+
+  view_matrix =
+    mat4::translate(-cam_pos.x, -cam_pos.y, -cam_pos.z) * view_matrix;
+
 }
 
 void Sim::reshape(int width, int height) {
@@ -191,6 +196,18 @@ void Sim::set_cam_z(float z) {
   cam_pos.z = z;
 }
 
+float Sim::get_cam_x() {
+  return cam_pos.x;
+}
+
+float Sim::get_cam_y() {
+  return cam_pos.y;
+}
+
+float Sim::get_cam_z() {
+  return cam_pos.z;
+}
+
 void Sim::set_rot_x(float x) {
   cam_angles.x = x;
 }
@@ -201,6 +218,18 @@ void Sim::set_rot_y(float y) {
 
 void Sim::set_rot_z(float z) {
   cam_angles.z = z;
+}
+
+float Sim::get_rot_x() {
+  return cam_angles.x;
+}
+
+float Sim::get_rot_y() {
+  return cam_angles.y;
+}
+
+float Sim::get_rot_z() {
+  return cam_angles.z;
 }
 
 mat4& Sim::get_view_matrix() {
@@ -214,4 +243,12 @@ mat4& Sim::get_projection_matrix() {
 void Sim::set_phys_callback(void (*cb)(float,void*), void* data) {
   callback = cb;
   cb_data = data;
+}
+
+void Sim::set_wired(bool wired) {
+  wire = wired;
+}
+
+bool Sim::get_wired() {
+  return wire;
 }

@@ -13,6 +13,8 @@ class Ground: public Geometry {
     Ground(const std::string& texture);
     virtual ~Ground();
     virtual void draw(float dt);
+
+    float get_height_at(float x, float z);
     
   protected:
     Pipeline shader;

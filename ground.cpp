@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <vector>
 
@@ -89,6 +90,18 @@ void Ground::draw(float dt) {
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-  glDrawElements(GL_TRIANGLE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
+  if (Sim::get_wired())
+    glDrawElements(GL_LINE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
+  else
+    glDrawElements(GL_TRIANGLE_STRIP, n_indicies, GL_UNSIGNED_INT, (void*)(0));
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+float Ground::get_height_at(float x, float z) {
+  unsigned ix = 400.0 + x / 32.0;
+  unsigned iz = 400.0 + z / 32.0;
+  if (ix >= tex.get_width() || iz >= tex.get_height()) {
+    return 0.0;
+  }
+  return tex.intensity_at(ix+iz*tex.get_width()) * 200.0;
 }

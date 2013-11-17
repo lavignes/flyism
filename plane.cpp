@@ -4,12 +4,13 @@
 
 #define DEG2RAD (M_PI * 2.0f) / 360.0f
 
-Plane::Plane(float x, float y, float z) {
+Plane::Plane(float x, float y, float z, float yaw) {
   this->x = x;
   this->y = y;
   this->z = z;
-  pitch = yaw = roll = 0.0;
-  v = 0.0;
+  pitch = roll = 0.0;
+  this->yaw = yaw;
+  v = 5.0;
 }
 
 float Plane::get_x() {

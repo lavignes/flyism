@@ -12,21 +12,21 @@ unsigned Tree::vao = 0;
 unsigned Tree::vbo = 0;
 
 const static vec3 sprite[6] = {
-  vec3(-500.0f, 500.0f, 0.0f),
-  vec3(-500.0f, -500.0f, 0.0f),
-  vec3(500.0f, 500.0f, 0.0f),
-  vec3(500.0f, 500.0f, 0.0f),
-  vec3(-500.0f, -500.0f, 0.0f),
-  vec3(500.0f, -500.0f, 0.0f),
+  vec3(-10.0f, 10.0f, 0.0f),
+  vec3(-10.0f, -10.0f, 0.0f),
+  vec3(10.0f, 10.0f, 0.0f),
+  vec3(10.0f, 10.0f, 0.0f),
+  vec3(-10.0f, -10.0f, 0.0f),
+  vec3(10.0f, -10.0f, 0.0f),
 };
 
 const static vec2 tex_st[6] = {
-  vec2(0.0f, 0.0f),
-  vec2(0.0f, 1.0f),
-  vec2(1.0f, 0.0f),
-  vec2(1.0f, 0.0f),
-  vec2(0.0f, 1.0f),
   vec2(1.0f, 1.0f),
+  vec2(1.0f, 0.0f),
+  vec2(0.0f, 1.0f),
+  vec2(0.0f, 1.0f),
+  vec2(1.0f, 0.0f),
+  vec2(0.0f, 0.0f),
 };
 
 Tree::Tree(float x, float y, float z) {
@@ -37,7 +37,7 @@ Tree::Tree(float x, float y, float z) {
   // Reference counting resource
   shader = (shader)? shader : new Pipeline("tree.vert", "tree.frag");
   shader_count++;
-  tex = (tex)? tex : new Bitmap("grnd.bmp");
+  tex = (tex)? tex : new Bitmap("tree.bmp");
 
   if (vao == 0 && vbo == 0) {
     glUseProgram(shader->get_id());
@@ -80,9 +80,8 @@ void Tree::draw(float dt) {
   glUseProgram(shader->get_id());
   glBindVertexArray(vao);
 
-  mat4 mv = Sim::get_view_matrix();
-
-  mv = mat4::translate(x, y, z) * mv;
+  mat4 mv =
+    mat4::translate(x, y, z) * Sim::get_view_matrix();
 
   glUniformMatrix4fv(shader->get_uniform(0), 1, false, 
     mv.as_array());
@@ -94,5 +93,11 @@ void Tree::draw(float dt) {
   glUniform1i(shader->get_uniform(2), 0);
   
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+  mv =
+     mat4::rotate_y(90.0) * mv;
+  glUniformMatrix4fv(shader->get_uniform(0), 1, false, 
+    mv.as_array());
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }

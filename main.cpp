@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <list>
 
@@ -27,15 +28,17 @@ struct SimState {
   list<Building*> buildings;
   list<Tree*> trees;
   SimState():
-    plane(0.0, 100.0, 0.0),
+    plane(3006.0, 58.30, 1180.0, -70.20),
     ground("grnd.bmp")
   {
-    buildings.push_back(new Building(3200.0, 80.0, 1600.0, 16.0, 1.0));
+    buildings.push_back(new Building(3200.0, 70.0, 1600.0, 16.0, 1.0));
     buildings.push_back(new Building(3000.0, 70.0, 1400.0, 45.0, 8.0));
     buildings.push_back(new Building(3160.0, 70.0, 1400.0, 45.0, 7.0));
     buildings.push_back(new Building(3264.0, 70.0, 1664.0, 0.0, 2.0));
     
-    trees.push_back(new Tree(3200.0, 200.0, 1600.0));
+    trees.push_back(new Tree(3000.0, 65.0, 1200.0));
+    trees.push_back(new Tree(3010.0, 65.0, 1220.0));
+    trees.push_back(new Tree(3020.0, 65.0, 1200.0));
   }
   ~SimState() {
     for (list<Building*>::iterator
@@ -58,12 +61,18 @@ struct SimState {
 void phys_callback(float dt, SimState* ss) {
 
   float ox = ss->plane.get_x();
+  float oy = ss->plane.get_y();
   float oz = ss->plane.get_z();
 
   ss->plane.phys(dt);
 
   if (Sim::is_key_pressed('\e'))
     Sim::quit();
+
+  if (Sim::is_key_pressed('='))
+    Sim::set_wired(true);
+  else if (Sim::is_key_pressed('-'))
+    Sim::set_wired(false);
 
   if (Sim::is_key_held('a'))
     ss->plane.set_yaw(ss->plane.get_yaw() + 12.0 * dt);
@@ -92,6 +101,8 @@ void phys_callback(float dt, SimState* ss) {
   //   ss->plane.get_y(),
   //   ss->plane.get_yaw());
 
+  // printf("%4.2f %4.2f\n", oy, ss->ground.get_height_at(ox, oz));
+
   for (list<Building*>::iterator
     i = ss->buildings.begin();
     i != ss->buildings.end();
@@ -108,6 +119,10 @@ void phys_callback(float dt, SimState* ss) {
       break;
     }
   }
+
+  float h = ss->ground.get_height_at(ox, oz) + 8.0;
+  if (oy < h)
+    ss->plane.set_y(h);
 
   Sim::set_cam_x(ss->plane.get_x());
   Sim::set_cam_y(ss->plane.get_y());

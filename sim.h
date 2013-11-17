@@ -29,14 +29,25 @@ class Sim {
     static void set_cam_y(float y);
     static void set_cam_z(float z);
 
+    static float get_cam_x();
+    static float get_cam_y();
+    static float get_cam_z();
+
     static void set_rot_x(float x);
     static void set_rot_y(float y);
     static void set_rot_z(float z);
+
+    static float get_rot_x();
+    static float get_rot_y();
+    static float get_rot_z();
 
     static mat4& get_view_matrix();
     static mat4& get_projection_matrix();
 
     static void set_phys_callback(void (*cb)(float,void*), void* data);
+
+    static void set_wired(bool wired);
+    static bool get_wired();
 
   protected:
 
@@ -55,6 +66,7 @@ class Sim {
     static void (*callback)(float,void*);
     static void* cb_data;
     static bool running;
+    static bool wire;
 
     static void keyboard_clear();
     static void keyboard_down(unsigned char, int, int);

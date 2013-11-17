@@ -95,12 +95,10 @@ void Building::draw(float dt) {
   glBindVertexArray(vao);
   glUseProgram(shader->get_id());
 
-  mat4 mv = Sim::get_view_matrix();
-
-  mv =
+  mat4 mv =
     mat4::scale(1.0, height, 1.0) *
     mat4::rotate_y(rot) *
-    mat4::translate(x, y, z) * mv;
+    mat4::translate(x, y, z) * Sim::get_view_matrix();
 
   glUniformMatrix4fv(shader->get_uniform(0), 1, false, 
     mv.as_array());
@@ -108,7 +106,10 @@ void Building::draw(float dt) {
     Sim::get_projection_matrix().as_array());
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glDrawArrays(GL_TRIANGLES, 0, 36);
+  if (Sim::get_wired())
+    glDrawArrays(GL_LINE_LOOP, 0, 36);
+  else
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 float Building::get_x() {

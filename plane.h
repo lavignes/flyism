@@ -3,7 +3,7 @@
 
 class Plane {
   public:
-    Plane(float x, float y, float z);
+    Plane(float x, float y, float z, float yaw);
     void phys(float dt);
 
     float get_x();
