@@ -13,8 +13,6 @@ class Tree: public Geometry {
     virtual void draw(float dt);
 
   protected:
-    float x, y, z;
-
     static Pipeline* shader;
     static Bitmap* tex;
     static unsigned shader_count;

@@ -25,35 +25,26 @@ using namespace std;
 struct SimState {
   Plane plane;
   Ground ground;
-  list<Building*> buildings;
-  list<Tree*> trees;
+  list<Geometry*> solids;
   SimState():
     plane(3006.0, 58.30, 1180.0, -70.20),
     ground("grnd.bmp")
   {
-    buildings.push_back(new Building(3200.0, 70.0, 1600.0, 16.0, 1.0));
-    buildings.push_back(new Building(3000.0, 70.0, 1400.0, 45.0, 8.0));
-    buildings.push_back(new Building(3160.0, 70.0, 1400.0, 45.0, 7.0));
-    buildings.push_back(new Building(3264.0, 70.0, 1664.0, 0.0, 2.0));
-    
-    trees.push_back(new Tree(3000.0, 65.0, 1200.0));
-    trees.push_back(new Tree(3010.0, 65.0, 1220.0));
-    trees.push_back(new Tree(3020.0, 65.0, 1200.0));
+    solids.push_back(new Building(3200.0, 70.0, 1600.0, 16.0, 1.0));
+    solids.push_back(new Building(3000.0, 70.0, 1400.0, 45.0, 8.0));
+    solids.push_back(new Building(3160.0, 70.0, 1400.0, 45.0, 7.0));
+    solids.push_back(new Building(3264.0, 70.0, 1664.0, 0.0, 2.0));
+    solids.push_back(new Tree(3000.0, 65.0, 1200.0));
+    solids.push_back(new Tree(3010.0, 65.0, 1220.0));
+    solids.push_back(new Tree(3020.0, 65.0, 1200.0));
   }
   ~SimState() {
-    for (list<Building*>::iterator
-      i = buildings.begin();
-      i != buildings.end();
-      i++)
+    for (list<Geometry*>::iterator
+      solid = solids.begin();
+      solid != solids.end();
+      solid++)
     {
-      delete *i;
-    }
-    for (list<Tree*>::iterator
-      i = trees.begin();
-      i != trees.end();
-      i++)
-    {
-      delete *i;
+      delete *solid;
     }
   }
 };
@@ -94,26 +85,17 @@ void phys_callback(float dt, SimState* ss) {
   else if (Sim::is_key_held('l'))
     ss->plane.set_speed(ss->plane.get_speed() - 12.0 * dt);
 
-  // printf("(%4.2f, %4.2f) -> As: %4.2f Alt: %4.2fm Heading: %4.2f°\n",
-  //   ss->plane.get_x(),
-  //   ss->plane.get_z(),
-  //   ss->plane.get_speed(),
-  //   ss->plane.get_y(),
-  //   ss->plane.get_yaw());
-
-  // printf("%4.2f %4.2f\n", oy, ss->ground.get_height_at(ox, oz));
-
-  for (list<Building*>::iterator
-    i = ss->buildings.begin();
-    i != ss->buildings.end();
-    i++)
+  for (list<Geometry*>::iterator
+    solid = ss->solids.begin();
+    solid != ss->solids.end();
+    solid++)
   {
-    float d = sqrtf((ox-(*i)->get_x())*(ox-(*i)->get_x()) +
-      (oz-(*i)->get_z())*(oz-(*i)->get_z()));
-    if (d < 20.0) {
+    float d = sqrtf((ox-(*solid)->get_x())*(ox-(*solid)->get_x()) +
+      (oz-(*solid)->get_z())*(oz-(*solid)->get_z()));
+    if (d < (*solid)->get_radius()) {
       ox += ss->plane.get_speed() * cosf(DEG2RAD * -ss->plane.get_yaw()) * dt;
       oz -= ss->plane.get_speed() * sinf(DEG2RAD * -ss->plane.get_yaw()) * dt;
-      ss->plane.set_yaw(ss->plane.get_yaw() - 12.0 * dt);
+      ss->plane.set_yaw(ss->plane.get_yaw() - 36.0 * dt);
       ss->plane.set_x(ox);
       ss->plane.set_z(oz);
       break;
@@ -139,22 +121,14 @@ int main(int argc, char* argv[]) {
   SimState ss;
   Sim::add_geometry(&ss.ground);
 
-  for (list<Building*>::iterator
-    i = ss.buildings.begin();
-    i != ss.buildings.end();
-    i++)
+  for (list<Geometry*>::iterator
+    solid = ss.solids.begin();
+    solid != ss.solids.end();
+    solid++)
   {
-    Sim::add_geometry(*i);
+    Sim::add_geometry(*solid);
   }
 
-  for (list<Tree*>::iterator
-    i = ss.trees.begin();
-    i != ss.trees.end();
-    i++)
-  {
-    Sim::add_geometry(*i);
-  }
-  
   Sim::set_phys_callback((void(*)(float, void*)) phys_callback, &ss);
   Sim::run();
 

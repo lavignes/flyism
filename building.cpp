@@ -52,10 +52,8 @@ const vec3 Building::cube[36] = {
   vec3(10.0f, -10.0f, -10.0f)
 };
 
-Building::Building(float x, float y, float z, float rot, float height) {
-  this->x = x;
-  this->y = y;
-  this->z = z;
+Building::Building(float x, float y, float z, float rot, float height):
+  Geometry(x, y, z, 20.0) {
   this->rot = rot;
   this->height = height;
 
@@ -110,18 +108,6 @@ void Building::draw(float dt) {
     glDrawArrays(GL_LINE_LOOP, 0, 36);
   else
     glDrawArrays(GL_TRIANGLES, 0, 36);
-}
-
-float Building::get_x() {
-  return x;
-}
-
-float Building::get_y() {
-  return y;
-}
-
-float Building::get_z() {
-  return z;
 }
 
 float Building::get_rot() {

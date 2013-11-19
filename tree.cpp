@@ -29,11 +29,7 @@ const static vec2 tex_st[6] = {
   vec2(0.0f, 0.0f),
 };
 
-Tree::Tree(float x, float y, float z) {
-  this->x = x;
-  this->y = y;
-  this->z = z;
-
+Tree::Tree(float x, float y, float z): Geometry(x, y, z, 2.0) {
   // Reference counting resource
   shader = (shader)? shader : new Pipeline("tree.vert", "tree.frag");
   shader_count++;
