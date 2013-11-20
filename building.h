@@ -22,6 +22,7 @@ class Building: public Geometry {
     static unsigned vao;
     static unsigned vbo;
     const static vec3 cube[36];
+    const static vec3 colors[36];
 };
 
 #endif /* BUILDING_H */

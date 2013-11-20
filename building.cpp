@@ -52,6 +52,52 @@ const vec3 Building::cube[36] = {
   vec3(10.0f, -10.0f, -10.0f)
 };
 
+
+const vec3 Building::colors[36] = {
+  vec3(0.1, 0.1, 0.1),
+  vec3(0.1, 0.1, 0.1),
+  vec3(0.1, 0.1, 0.1),
+  vec3(0.1, 0.1, 0.1),
+  vec3(0.1, 0.1, 0.1),
+  vec3(0.1, 0.1, 0.1),
+
+  vec3(0.3, 0.3, 0.3),
+  vec3(0.3, 0.3, 0.3),
+  vec3(0.3, 0.3, 0.3),
+  vec3(0.3, 0.3, 0.3),
+  vec3(0.3, 0.3, 0.3),
+  vec3(0.3, 0.3, 0.3),
+
+  vec3(0.5, 0.5, 0.5),
+  vec3(0.5, 0.5, 0.5),
+  vec3(0.5, 0.5, 0.5),
+  vec3(0.5, 0.5, 0.5),
+  vec3(0.5, 0.5, 0.5),
+  vec3(0.5, 0.5, 0.5),
+
+  vec3(0.2, 0.2, 0.2),
+  vec3(0.2, 0.2, 0.2),
+  vec3(0.2, 0.2, 0.2),
+  vec3(0.2, 0.2, 0.2),
+  vec3(0.2, 0.2, 0.2),
+  vec3(0.2, 0.2, 0.2),
+
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0),
+  vec3(0.0, 0.0, 0.0)
+};
+
+
 Building::Building(float x, float y, float z, float rot, float height):
   Geometry(x, y, z, 20.0) {
   this->rot = rot;
@@ -68,12 +114,19 @@ Building::Building(float x, float y, float z, float rot, float height):
 
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cube) + sizeof(colors), NULL, GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(cube), cube);
+    glBufferSubData(GL_ARRAY_BUFFER, sizeof(cube), sizeof(colors), colors);
 
     shader->bind_attribute("coord", 0);
     glEnableVertexAttribArray(shader->get_attribute(0));
     glVertexAttribPointer(
       shader->get_attribute(0), 3, GL_FLOAT, false, 0, (void*)(0));
+
+    shader->bind_attribute("color", 1);
+    glEnableVertexAttribArray(shader->get_attribute(1));
+    glVertexAttribPointer(
+      shader->get_attribute(1), 3, GL_FLOAT, false, 0, (void*)(sizeof(cube)));
 
     shader->bind_uniform("mv", 0);
     shader->bind_uniform("proj", 1);

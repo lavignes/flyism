@@ -31,12 +31,18 @@ struct SimState {
     ground("grnd.bmp")
   {
     solids.push_back(new Building(3200.0, 70.0, 1600.0, 16.0, 1.0));
+    solids.push_back(new Building(3232.0, 70.0, 1664.0, 16.0, 1.0));
+    solids.push_back(new Building(3264.0, 70.0, 1632.0, 16.0, 1.0));
+
     solids.push_back(new Building(3000.0, 70.0, 1400.0, 45.0, 8.0));
+    solids.push_back(new Building(3032.0, 70.0, 1432.0, 16.0, 2.0));
+    solids.push_back(new Building(3300.0, 70.0, 1400.0, 45.0, 8.0));
     solids.push_back(new Building(3160.0, 70.0, 1400.0, 45.0, 7.0));
     solids.push_back(new Building(3264.0, 70.0, 1664.0, 0.0, 2.0));
     solids.push_back(new Tree(3000.0, 65.0, 1200.0));
     solids.push_back(new Tree(3010.0, 65.0, 1220.0));
     solids.push_back(new Tree(3020.0, 65.0, 1200.0));
+    solids.push_back(new Tree(3296.0, 75.0, 1596.0));
   }
   ~SimState() {
     for (list<Geometry*>::iterator
