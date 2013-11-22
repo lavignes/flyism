@@ -71,7 +71,6 @@ Ground::Ground(const string& texture):
 
   shader.bind_uniform("mv", 0);
   shader.bind_uniform("proj", 1);
-  shader.bind_uniform("dt", 2);
 }
 
 Ground::~Ground() {
@@ -81,8 +80,6 @@ Ground::~Ground() {
 }
 
 void Ground::draw(float dt) {
-  static float t;
-  t += dt;
   glUseProgram(shader.get_id());
   glBindVertexArray(vao);
 
@@ -91,7 +88,6 @@ void Ground::draw(float dt) {
   glUniformMatrix4fv(shader.get_uniform(1), 1, false, 
     Sim::get_projection_matrix().as_array());
 
-  glUniform1f(shader.get_uniform(2), t);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);

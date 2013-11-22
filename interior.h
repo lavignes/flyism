@@ -3,6 +3,7 @@
 
 #include "geometry.h"
 #include "shader.h"
+#include "bitmap.h"
 
 class Interior: public Geometry {
   public:
@@ -14,7 +15,7 @@ class Interior: public Geometry {
     static Pipeline* shader;
     static unsigned shader_count;
     static unsigned vao;
-    static unsigned panel_vbo;
+    static unsigned gimble_vbo;
 };
 
 #endif /* INTERIOR_H */

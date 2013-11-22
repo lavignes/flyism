@@ -32,8 +32,8 @@ const static vec2 tex_st[6] = {
 Tree::Tree(float x, float y, float z): Geometry(x, y, z, 2.0) {
   // Reference counting resource
   shader = (shader)? shader : new Pipeline("tree.vert", "tree.frag");
-  shader_count++;
   tex = (tex)? tex : new Bitmap("tree.bmp");
+  shader_count++;
 
   if (vao == 0 && vbo == 0) {
     glUseProgram(shader->get_id());
@@ -71,7 +71,7 @@ Tree::~Tree() {
     delete tex;
   }
 }
-
+#include <stdio.h>
 void Tree::draw(float dt) {
   glUseProgram(shader->get_id());
   glBindVertexArray(vao);
@@ -84,7 +84,7 @@ void Tree::draw(float dt) {
   glUniformMatrix4fv(shader->get_uniform(1), 1, false, 
     Sim::get_projection_matrix().as_array());
 
-  glActiveTexture(GL_TEXTURE0 + shader->get_uniform(2));
+  glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, tex->get_id());
   glUniform1i(shader->get_uniform(2), 0);
   

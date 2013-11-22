@@ -89,9 +89,9 @@ void phys_callback(float dt, SimState* ss) {
     ss->plane.set_pitch(ss->plane.get_pitch() + 24.0 * dt);
 
   if (Sim::is_key_held('p'))
-    ss->plane.set_speed(ss->plane.get_speed() + 24.0 * dt);
+    ss->plane.set_speed(ss->plane.get_speed() + 50.0 * dt);
   else if (Sim::is_key_held('l'))
-    ss->plane.set_speed(ss->plane.get_speed() - 24.0 * dt);
+    ss->plane.set_speed(ss->plane.get_speed() - 50.0 * dt);
 
   for (list<Geometry*>::iterator
     solid = ss->solids.begin();
@@ -128,7 +128,6 @@ int main(int argc, char* argv[]) {
 
   SimState ss;
   Sim::add_geometry(&ss.ground);
-  Sim::add_geometry(&ss.interior);
 
   for (list<Geometry*>::iterator
     solid = ss.solids.begin();
@@ -137,6 +136,8 @@ int main(int argc, char* argv[]) {
   {
     Sim::add_geometry(*solid);
   }
+  
+  Sim::add_geometry(&ss.interior);
 
   Sim::set_phys_callback((void(*)(float, void*)) phys_callback, &ss);
   Sim::run();
