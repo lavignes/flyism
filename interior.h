@@ -11,11 +11,10 @@ class Interior: public Geometry {
     virtual void draw(float dt);
 
   protected:
-    Pipeline shader;
-    unsigned vao;
-    unsigned panel_vbo;
-    unsigned dial_vbo;
-    unsigned compass_vbo;
+    static Pipeline* shader;
+    static unsigned shader_count;
+    static unsigned vao;
+    static unsigned panel_vbo;
 };
 
 #endif /* INTERIOR_H */

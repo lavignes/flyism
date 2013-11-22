@@ -99,7 +99,8 @@ const vec3 Building::colors[36] = {
 
 
 Building::Building(float x, float y, float z, float rot, float height):
-  Geometry(x, y, z, 20.0) {
+  Geometry(x, y, z, 20.0)
+{
   this->rot = rot;
   this->height = height;
 

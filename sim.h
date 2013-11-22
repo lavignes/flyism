@@ -43,6 +43,7 @@ class Sim {
 
     static mat4& get_view_matrix();
     static mat4& get_projection_matrix();
+    static mat4& get_ortho_matrix();
 
     static void set_phys_callback(void (*cb)(float,void*), void* data);
 
@@ -56,6 +57,7 @@ class Sim {
 
     static mat4 view_matrix;
     static mat4 proj_matrix;
+    static mat4 ortho_matrix;
     static mat4 vp;
 
     Sim();

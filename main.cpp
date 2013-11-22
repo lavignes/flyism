@@ -7,6 +7,7 @@
 #include "ground.h"
 #include "plane.h"
 #include "building.h"
+#include "interior.h"
 #include "tree.h"
 #include "maths.h"
 
@@ -25,6 +26,7 @@ using namespace std;
 struct SimState {
   Plane plane;
   Ground ground;
+  Interior interior;
   list<Geometry*> solids;
   SimState():
     plane(3006.0, 58.30, 1180.0, -70.20),
@@ -33,12 +35,12 @@ struct SimState {
     solids.push_back(new Building(3200.0, 70.0, 1600.0, 16.0, 1.0));
     solids.push_back(new Building(3232.0, 70.0, 1664.0, 16.0, 1.0));
     solids.push_back(new Building(3264.0, 70.0, 1632.0, 16.0, 1.0));
-
     solids.push_back(new Building(3000.0, 70.0, 1400.0, 45.0, 8.0));
     solids.push_back(new Building(3032.0, 70.0, 1432.0, 16.0, 2.0));
     solids.push_back(new Building(3300.0, 70.0, 1400.0, 45.0, 8.0));
     solids.push_back(new Building(3160.0, 70.0, 1400.0, 45.0, 7.0));
     solids.push_back(new Building(3264.0, 70.0, 1664.0, 0.0, 2.0));
+
     solids.push_back(new Tree(3000.0, 65.0, 1200.0));
     solids.push_back(new Tree(3010.0, 65.0, 1220.0));
     solids.push_back(new Tree(3020.0, 65.0, 1200.0));
@@ -72,24 +74,24 @@ void phys_callback(float dt, SimState* ss) {
     Sim::set_wired(false);
 
   if (Sim::is_key_held('a'))
-    ss->plane.set_yaw(ss->plane.get_yaw() + 12.0 * dt);
+    ss->plane.set_yaw(ss->plane.get_yaw() + 24.0 * dt);
   else if (Sim::is_key_held('d'))
-    ss->plane.set_yaw(ss->plane.get_yaw() - 12.0 * dt);
+    ss->plane.set_yaw(ss->plane.get_yaw() - 24.0 * dt);
 
   if (Sim::is_key_held('q'))
-    ss->plane.set_roll(ss->plane.get_roll() + 12.0 * dt);
+    ss->plane.set_roll(ss->plane.get_roll() + 24.0 * dt);
   else if (Sim::is_key_held('e'))
-    ss->plane.set_roll(ss->plane.get_roll() - 12.0 * dt);
+    ss->plane.set_roll(ss->plane.get_roll() - 24.0 * dt);
 
   if (Sim::is_key_held('w'))
-    ss->plane.set_pitch(ss->plane.get_pitch() - 12.0 * dt);
+    ss->plane.set_pitch(ss->plane.get_pitch() - 24.0 * dt);
   else if (Sim::is_key_held('s'))
-    ss->plane.set_pitch(ss->plane.get_pitch() + 12.0 * dt);
+    ss->plane.set_pitch(ss->plane.get_pitch() + 24.0 * dt);
 
   if (Sim::is_key_held('p'))
-    ss->plane.set_speed(ss->plane.get_speed() + 12.0 * dt);
+    ss->plane.set_speed(ss->plane.get_speed() + 24.0 * dt);
   else if (Sim::is_key_held('l'))
-    ss->plane.set_speed(ss->plane.get_speed() - 12.0 * dt);
+    ss->plane.set_speed(ss->plane.get_speed() - 24.0 * dt);
 
   for (list<Geometry*>::iterator
     solid = ss->solids.begin();
@@ -126,6 +128,7 @@ int main(int argc, char* argv[]) {
 
   SimState ss;
   Sim::add_geometry(&ss.ground);
+  Sim::add_geometry(&ss.interior);
 
   for (list<Geometry*>::iterator
     solid = ss.solids.begin();

@@ -15,6 +15,7 @@ vec3 Sim::cam_pos;
 vec3 Sim::cam_angles;
 mat4 Sim::view_matrix;
 mat4 Sim::proj_matrix;
+mat4 Sim::ortho_matrix;
 mat4 Sim::vp;
 
 void (*Sim::callback)(float,void*)  = NULL;
@@ -146,7 +147,6 @@ void Sim::quit() {
 
 void Sim::look() {
 
-
   // Default field rotation is 90 on y
   view_matrix =
     mat4::rotate_y(cam_angles.y-90) *
@@ -168,6 +168,16 @@ void Sim::reshape(int width, int height) {
   proj_matrix[2][2] = (far+near)/(near-far);
   proj_matrix[3][2] = (2*far*near)/(near-far);
   proj_matrix[2][3] = -1.0;
+
+  float w = width / 2.0;
+  float h = height / 2.0;
+  ortho_matrix[0][0] = 2.0/(w - (-w));
+  ortho_matrix[1][1] = 2.0/(h - (-h));
+  ortho_matrix[2][2] = 2.0/(near - far);
+  ortho_matrix[3][3] = 1.0;
+  ortho_matrix[3][0] = 0.0;
+  ortho_matrix[3][1] = -1.0;
+  ortho_matrix[3][2] = -(far + near)/(far - near);
 
   glViewport(0, 0, width, height);
 }
@@ -238,6 +248,10 @@ mat4& Sim::get_view_matrix() {
 
 mat4& Sim::get_projection_matrix() {
   return proj_matrix;
+}
+
+mat4& Sim::get_ortho_matrix() {
+  return ortho_matrix;
 }
 
 void Sim::set_phys_callback(void (*cb)(float,void*), void* data) {
