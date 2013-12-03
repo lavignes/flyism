@@ -8,6 +8,7 @@ class Geometry {
     float get_y();
     float get_z();
     float get_radius();
+    virtual ~Geometry() {};
   protected:
     Geometry(float x, float y, float z, float radius);
     float x, y, z;
