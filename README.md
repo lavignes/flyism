@@ -5,6 +5,7 @@ A flight simulator written in like a week or something
 
 [![Youtube Video](http://img.youtube.com/vi/cLveYDVNOEA/0.jpg)](http://www.youtube.com/watch?v=cLveYDVNOEA)
 
+```
 Controls:
   a   => yaw plane to the left
   d   => yaw plane to the right
@@ -15,4 +16,4 @@ Controls:
   p   => speed up
   l   => slow down
   esc => quit program
-
+```
